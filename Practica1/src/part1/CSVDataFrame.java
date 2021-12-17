@@ -1,6 +1,5 @@
-package data;
+package part1;
 
-import java.util.Comparator;
 import java.util.Iterator;
 
 public class CSVDataFrame extends DataFrame {

@@ -1,4 +1,4 @@
-package data;
+package part1;
 
 public class JSONDataFrameFactory extends DataFrameFactory{
     public JSONDataFrameFactory(String fileName) {
