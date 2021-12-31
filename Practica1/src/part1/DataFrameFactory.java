@@ -1,11 +1,5 @@
 package part1;
 
-public abstract class DataFrameFactory {
-    String fileName;
-
-    public DataFrameFactory(String fileName){
-        this.fileName = fileName;
-    }
-
-    public abstract DataFrame createDataFrame();
+public interface DataFrameFactory<T> {
+    DataFrameAbstract<T> createDataFrame(String filename);
 }

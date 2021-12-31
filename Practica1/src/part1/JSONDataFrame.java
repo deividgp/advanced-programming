@@ -1,13 +1,12 @@
 package part1;
 
-public class JSONDataFrame {
-    int[][] data;
-    String[] columnLabels;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-    public JSONDataFrame(int[][] data, String[] columnLabels){
-        this.data = data;
-        this.columnLabels = columnLabels;
+public class JSONDataFrame<T> extends DataFrameAbstract<T> {
+
+    public JSONDataFrame(HashMap<String, ArrayList<T>> dataFrame){
+        super(dataFrame);
     }
-
 
 }

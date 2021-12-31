@@ -1,12 +1,13 @@
 package part1;
 
-public class TXTDataFrame {
-    int[][] data;
-    String[] columnLabels;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-    public TXTDataFrame(int[][] data, String[] columnLabels){
-        this.data = data;
-        this.columnLabels = columnLabels;
+public class TXTDataFrame<T> extends DataFrameAbstract<T> {
+
+    public TXTDataFrame(HashMap<String, ArrayList<T>> dataFrame){
+        super(dataFrame);
     }
+
 
 }

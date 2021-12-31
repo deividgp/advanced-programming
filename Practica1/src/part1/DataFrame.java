@@ -1,38 +1,18 @@
 package part1;
 
+import part5.DataFrameVisitorInterface;
+
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.function.Predicate;
 
-public abstract class DataFrame implements Iterable<String> {
-    String[] columnLabels;
-    int[] rows;
-    String[] content;
-
-    public DataFrame(String[] columnLabels, int[] rows, String[] content){
-        this.columnLabels = columnLabels;
-        this.rows = rows;
-        this.content = content;
-    }
-
-    protected DataFrame() {
-    }
-
-    public String at(int row, String column){
-        return null;
-    }
-
-    public String iat(int row, String column){
-        return null;
-    }
-
-    public int columns(){
-        return columnLabels.length-1;
-    }
-
-    public int size(){
-        return rows.length-1;
-    }
-
-    public String sort(String column, Comparator<DataFrame> comparator){
-        return null;
-    }
+public interface DataFrame<T> extends Iterable<HashMap<String, ArrayList<T>>>, DataFrameVisitorInterface<T> {
+    String at(int row, String column);
+    String iat(int row, int column);
+    int columns();
+    int size();
+    List<T> sort(String column, Comparator<T> comparator);
+    List<T> query(Predicate<T> condition);
 }

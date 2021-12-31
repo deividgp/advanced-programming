@@ -1,13 +1,13 @@
 package part1;
 
-public class TXTDataFrameFactory extends DataFrameFactory {
+public class TXTDataFrameFactory<T> implements DataFrameFactory<T> {
 
-    public TXTDataFrameFactory(String fileName) {
-        super(fileName);
+    public TXTDataFrameFactory() {
+
     }
 
     @Override
-    public DataFrame createDataFrame() {
+    public DataFrameAbstract<T> createDataFrame(String filename) {
         return null;
     }
 }

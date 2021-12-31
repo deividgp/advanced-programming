@@ -1,18 +1,13 @@
 package part1;
 
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-public class CSVDataFrame extends DataFrame {
-    String[] columnLabels;
-    int[] rows;
-    String[] content;
+public class CSVDataFrame<T> extends DataFrameAbstract<T> {
 
-    public CSVDataFrame(String[] columnLabels, int[] rows, String[] content){
-        super(columnLabels, rows, content);
+    public CSVDataFrame(HashMap<String, ArrayList<T>> dataFrame){
+        super(dataFrame);
     }
 
-    @Override
-    public Iterator<String> iterator() {
-        return null;
-    }
+
 }
