@@ -1,8 +1,7 @@
-package part1;
+package java;
 
 import part5.Visitor;
 
-import javax.xml.crypto.Data;
 import java.util.*;
 import java.util.function.Predicate;
 

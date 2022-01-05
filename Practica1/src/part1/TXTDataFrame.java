@@ -2,12 +2,12 @@ package part1;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
-public class TXTDataFrame<T> extends DataFrameAbstract<T> {
+public class TXTDataFrame extends DataFrameAbstract {
 
-    public TXTDataFrame(HashMap<String, ArrayList<T>> dataFrame){
+    public TXTDataFrame(HashMap<String, ArrayList<Object>> dataFrame){
         super(dataFrame);
     }
-
 
 }

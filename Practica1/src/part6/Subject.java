@@ -7,24 +7,18 @@ import java.util.List;
 
 public class Subject {
     private List<Observer> observers = new ArrayList<Observer>();
-    private int state;
 
-    public int getState() {
-        return state;
-    }
-
-    public void setState(int state) {
-        this.state = state;
-        notifyAllObservers(state);
-    }
-
-    public void attach(Observer observer){
+    public void subscribe(Observer observer){
         observers.add(observer);
     }
 
-    public void notifyAllObservers(int state){
-        for (Observer observer : observers) {
-            observer.update(state);
+    public void unsubscribe(Observer observer){
+        observers.remove(observer);
+    }
+
+    public void notify(String method){
+        if(method.equals("query")){
+
         }
     }
 }

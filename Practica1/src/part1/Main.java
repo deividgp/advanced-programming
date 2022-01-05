@@ -1,10 +1,15 @@
 package part1;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
+
 public class Main {
-    public static <T> void main(String[] args){
-        CSVDataFrameFactory<T> csvFactory = new CSVDataFrameFactory<T>();
-        csvFactory.createDataFrame("cities.csv");
-//        JSONDataFrameFactory<T> jsonFactory = new JSONDataFrameFactory<T>();
-//        jsonFactory.createDataFrame("cities.json");
+    public static void main(String[] args){
+        CSVDataFrameFactory csvFactory = new CSVDataFrameFactory();
+        DataFrame data = csvFactory.createDataFrame("cities.csv", "");
+
+        JSONDataFrameFactory jsonFactory = new JSONDataFrameFactory();
+        DataFrame dataJSON = jsonFactory.createDataFrame("cities.json", "");
     }
 }

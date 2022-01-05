@@ -7,6 +7,7 @@ import java.lang.reflect.Proxy;
 
 public class DataFrameInterceptor implements InvocationHandler {
     private Object target = null;
+    private Subject subject = null;
     public static Object newInstance(Object target){
         Class targetClass = target.getClass();
         Class interfaces[] = targetClass.getInterfaces();
@@ -15,6 +16,9 @@ public class DataFrameInterceptor implements InvocationHandler {
     }
     private DataFrameInterceptor(Object target) {
         this.target = target;
+        subject = new Subject();
+        subject.subscribe(new LogObserver());
+        subject.subscribe(new QueryObserver());
     }
 
     @Override

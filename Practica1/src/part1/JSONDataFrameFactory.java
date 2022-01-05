@@ -8,13 +8,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-public class JSONDataFrameFactory<T> implements DataFrameFactory<T>{
+public class JSONDataFrameFactory extends DataFrameFactory{
     public JSONDataFrameFactory() {
+        super();
     }
 
 
-    public DataFrameAbstract<T> createDataFrame(String filename) {
-        HashMap<String, ArrayList<T>> dataFrame = new HashMap<>();
+    public DataFrameAbstract createDataFrame(String filename, String format) {
+        HashMap<String, ArrayList<Object>> dataFrame = new HashMap<>();
         Gson gson = new Gson();
 
         try (JsonReader reader = new JsonReader(new FileReader(filename))) {
@@ -31,14 +32,18 @@ public class JSONDataFrameFactory<T> implements DataFrameFactory<T>{
 
                 for(int j = 0; j < map.size(); j++){
                     String key = (String) keys.toArray()[j];
-                    ArrayList<T> columnList = dataFrame.get(key);
-                    columnList.add((T) map.get(key));
+                    ArrayList<Object> columnList = dataFrame.get(key);
+                    columnList.add(transformString(map.get(key)));
                     dataFrame.put(key, columnList);
                 }
             }
         }catch(IOException e) {
             e.printStackTrace();
         }
-        return new JSONDataFrame<>(dataFrame);
+        List<Object> hola = dataFrame.get("LatD");
+        for (Object hol : hola){
+            System.out.println(hol.getClass());
+        }
+        return new JSONDataFrame(dataFrame);
     }
 }

@@ -1,16 +1,17 @@
 package part2;
 
 import part1.DataFrame;
-import part5.DataFrameVisitor;
-import part5.DataFrameVisitorInterface;
+import part1.DataFrameAbstract;
+import part5.Visitor;
 
+import javax.xml.crypto.Data;
 import java.util.*;
 import java.util.function.Predicate;
 
-public class DataFrameDirectory<T> implements DataFrame<T>, DataFrameVisitorInterface<T> {
+public class DataFrameDirectory implements DataFrame {
 
     private String name;
-    private List<DataFrame<T>> dataFrameList;
+    private List<DataFrame> dataFrameList;
 
     public DataFrameDirectory(String name) {
         super();
@@ -18,78 +19,105 @@ public class DataFrameDirectory<T> implements DataFrame<T>, DataFrameVisitorInte
         dataFrameList = new LinkedList<>();
     }
 
-    public void addChild(DataFrame<T> child){
+    public void addChild(DataFrame child){
         dataFrameList.add(child);
     }
 
-    public void removeChild(DataFrame<T> child){
+    public void removeChild(DataFrame child){
         dataFrameList.remove(child);
     }
 
-    public String at(int row, String column) {
-        for (DataFrame<T> dataFrame : dataFrameList){
-            dataFrame.at(row, column);
-        }
-        return null;
+    public List<DataFrame> getChildren() {
+        return dataFrameList;
     }
 
-    public String iat(int row, int column) {
-        for (DataFrame<T> dataFrame : dataFrameList){
-            dataFrame.iat(row, column);
+    public List<Object> at(int row, String column) {
+        List<Object> list = new LinkedList<>();
+
+        for (DataFrame dataFrame : dataFrameList){
+            list.addAll(dataFrame.at(row, column));
         }
-        return null;
+        return list;
     }
 
-    public int columns() {
-        for (DataFrame<T> dataFrame : dataFrameList){
-            dataFrame.columns();
+    public List<Object> iat(int row, int column) {
+        List<Object> list = new LinkedList<>();
+
+        for (DataFrame dataFrame : dataFrameList){
+            list.addAll(dataFrame.iat(row, column));
         }
+        return list;
+    }
+
+    public List<Integer> columns() {
+        List<Integer> list = new LinkedList<>();
+
+        for (DataFrame dataFrame : dataFrameList){
+            list.addAll(dataFrame.columns());
+        }
+        return list;
+    }
+
+    public List<Integer> size() {
+        List<Integer> list = new LinkedList<>();
+
+        for (DataFrame dataFrame : dataFrameList){
+            list.addAll(dataFrame.size());
+        }
+        return list;
+    }
+
+    public List<List<Object>> sort(String column, Comparator<Object> comparator) {
+        List<List<Object>> list = new LinkedList<>();
+
+        for (DataFrame dataFrame : dataFrameList){
+            list.addAll(dataFrame.sort(column, comparator));
+        }
+        return list;
+    }
+
+    public List<DataFrame> query(String column, Predicate<Object> condition) {
+        List<DataFrame> list = new LinkedList<>();
+
+        for (DataFrame dataFrame : dataFrameList){
+            list.addAll(dataFrame.query(column, condition));
+        }
+        return list;
+    }
+
+    public double accept(Visitor v){
+        v.visit(this);
         return 0;
-    }
-
-    public int size() {
-        for (DataFrame<T> dataFrame : dataFrameList){
-            dataFrame.size();
-        }
-        return 0;
-    }
-
-    public List<T> sort(String column, Comparator<T> comparator) {
-        for (DataFrame<T> dataFrame : dataFrameList){
-            dataFrame.sort(column, comparator);
-        }
-        return null;
-    }
-
-    public List<T> query(Predicate<T> condition) {
-        for (DataFrame<T> dataFrame : dataFrameList){
-            dataFrame.query(condition);
-        }
-        return null;
     }
 
     @Override
-    public Iterator<HashMap<String, ArrayList<T>>> iterator() {
+    public Iterator<Set<Map.Entry<String, ArrayList<Object>>>> iterator() {
+        List<Set<Map.Entry<String, ArrayList<Object>>>> list = new LinkedList<>();
+        for(DataFrame dataframe : dataFrameList){
+            Iterator<Set<Map.Entry<String, ArrayList<Object>>>> ite = dataframe.iterator();
+            while (ite.hasNext()){
+                Set<Map.Entry<String, ArrayList<Object>>> o = ite.next();
+                list.add(o);
+            }
+        }
+        return list.iterator();
+    }
+
+    public List<DataFrame> toList() {
+        List<DataFrame> result = new LinkedList<>();
+        result.add(this);
+        for (DataFrame child : dataFrameList)
+            result.addAll(child.toList());
+        return result;
+    }
+
+    @Override
+    public boolean hasNext() {
+        return false;
+    }
+
+    @Override
+    public Set<Map.Entry<String, ArrayList<Object>>> next() {
         return null;
-    }
-
-    @Override
-    public double maximum(DataFrameVisitor<T> visitor) {
-        return 0;
-    }
-
-    @Override
-    public double minimum(DataFrameVisitor<T> visitor) {
-        return 0;
-    }
-
-    @Override
-    public double average(DataFrameVisitor<T> visitor) {
-        return 0;
-    }
-
-    @Override
-    public double sum(DataFrameVisitor<T> visitor) {
-        return 0;
     }
 }
