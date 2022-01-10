@@ -44,8 +44,12 @@ public class Main {
         }
         data.query(e -> (Double)e.get("LatD") > 39);
         System.out.println("Column values: "+data.getColumnValues("LatD"));
-        Visitor visit = new MinimumVisitor("LatD");
-        System.out.println("Visitor: " + data.accept(visit));
+        Visitor visitMin = new MinimumVisitor("LatD");
+        System.out.println("Visitor: " + data.accept(visitMin));
+        Visitor visitMax = new MinimumVisitor("LatD");
+        System.out.println("Visitor: " + data.accept(visitMax));
+        Visitor visitAvg = new MinimumVisitor("LatD");
+        System.out.println("Visitor: " + data.accept(visitAvg));
 
         LinkedList<DataFrame> list = new LinkedList<>();
         list.add(data);

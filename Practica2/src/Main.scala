@@ -1,7 +1,9 @@
-import dataframe.{CSVDataFrameFactory, DataFrameAbstract}
+import dataframe.{CSVDataFrameFactory, DataFrameFile}
 import part1.DataFrameDirectory
-import part2.Visitor
+import part2.{CounterVisitor, FilterVisitor, Visitor}
 
+import java.util
+import java.util.HashMap
 import scala.annotation.tailrec
 import scala.language.postfixOps
 import scala.jdk.CollectionConverters.*
@@ -9,13 +11,26 @@ import scala.jdk.CollectionConverters.*
 object Main extends App {
   val CSVFactory = new CSVDataFrameFactory()
   val dataframe = CSVFactory.createDataFrame("cities.csv", "")
-  val listFloat = dataframe.getColumnList("LatD").asScala.toList
-  val listString = dataframe.getColumnList("City").asScala.toList
+  val listDouble = dataframe.getColumnValues("LatD").asScala.toList
+  val listString = dataframe.getColumnValues("City").asScala.toList
 
-  val hola = listFilterMapTail[String, String](a => a.contains("Winnipeg"), a => a.replace("Winnipeg", "hola"), listString.asInstanceOf[List[String]])
-  val hola2 = listFilterMapTail[Float, Int](a => a > 100, a => a.round, listFloat.asInstanceOf[List[Float]])
-  val hola3 = listFilterMapStack[String, String](a => a.contains("Winnipeg"), a => a.replace("Winnipeg", "hola"), listString.asInstanceOf[List[String]])
-  val hola4 = listFilterMapStack[Float, Int](a => a > 100, a => a.round, listFloat.asInstanceOf[List[Float]])
+  val v = new FilterVisitor((e: util.HashMap[String, AnyRef]) => e.get("LatD").asInstanceOf[Double] >= 39)
+  dataframe.accept(v)
+  println("Filtered: " + v.elements)
+
+  val c = new CounterVisitor()
+  dataframe.accept(c)
+  println("DataFrame files: " + c.files + " DataFrame dirs: " + c.dirs)
+
+  val stringMapTail = listFilterMapTail[String, String](a => a.contains("Winnipeg"), a => a.replace("Winnipeg", "hola"), listString.asInstanceOf[List[String]])
+  val numberMapTail = listFilterMapTail[Double, Int](a => a > 100, a => a.round.toInt, listDouble.asInstanceOf[List[Double]])
+  val stringMapStack = listFilterMapStack[String, String](a => a.contains("Winnipeg"), a => a.replace("Winnipeg", "hola"), listString.asInstanceOf[List[String]])
+  val numberMapStack = listFilterMapStack[Double, Int](a => a > 100, a => a.round.toInt, listDouble.asInstanceOf[List[Double]])
+
+  println(stringMapTail)
+  println(numberMapTail)
+  println(stringMapStack)
+  println(numberMapStack)
 
   def listFilterMapStack[A,B](condition: A => Boolean, operation: A => B, listA: List[A]) : List[B] = listA match {
     case Nil => Nil
@@ -42,10 +57,10 @@ object Main extends App {
   }
 
   // MultipleInheritance
-  class Combination extends DataFrameDirectory with Visitor
-  val c = new Combination()
-  c.whichClassDirectory()
-  c.whichClassVisitor()
+//  class Combination extends DataFrameDirectory with Visitor
+//  val c = new Combination()
+//  c.whichClassDirectory()
+//  c.whichClassVisitor()
 
   // Curry implementation
   def listFilterMapStackCurry[A,B](condition: A => Boolean, listA: List[A]) (operation:(A => B)) : List[B] = listA match {
@@ -59,6 +74,6 @@ object Main extends App {
   }
 
   def replace = (a:String) => a.replace("Winnipeg", "hola")
-  var hola5 = listFilterMapStackCurry[String, String](a => a.contains("Winnipeg"), listString.asInstanceOf[List[String]])(replace)
-  print(hola5)
+  var mapStackCurry = listFilterMapStackCurry[String, String](a => a.contains("Winnipeg"), listString.asInstanceOf[List[String]])(replace)
+  print(mapStackCurry)
 }
