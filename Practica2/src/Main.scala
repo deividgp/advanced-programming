@@ -11,8 +11,12 @@ import scala.jdk.CollectionConverters.*
 object Main extends App {
   val CSVFactory = new CSVDataFrameFactory()
   val dataframe = CSVFactory.createDataFrame("cities.csv", "")
+  val dataframe2 = CSVFactory.createDataFrame("cities.csv", "")
   val listDouble = dataframe.getColumnValues("LatD").asScala.toList
   val listString = dataframe.getColumnValues("City").asScala.toList
+  val directory = new DataFrameDirectory("directori")
+  directory.addChild(dataframe)
+  directory.addChild(dataframe2)
 
   val v = new FilterVisitor((e: util.HashMap[String, AnyRef]) => e.get("LatD").asInstanceOf[Double] >= 39)
   dataframe.accept(v)
@@ -57,10 +61,16 @@ object Main extends App {
   }
 
   // MultipleInheritance
-//  class Combination extends DataFrameDirectory with Visitor
-//  val c = new Combination()
-//  c.whichClassDirectory()
-//  c.whichClassVisitor()
+
+  // Fold
+
+  // For loops
+  val list = directory.getChildren
+  val result = for {
+    d <- list
+    n = d.at(0, "LatD")
+  } yield n
+  println(result)
 
   // Curry implementation
   def listFilterMapStackCurry[A,B](condition: A => Boolean, listA: List[A]) (operation:(A => B)) : List[B] = listA match {
