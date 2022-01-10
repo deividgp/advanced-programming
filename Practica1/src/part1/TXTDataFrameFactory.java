@@ -7,14 +7,25 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * DataFrameFactory implementation.
+ */
 public class TXTDataFrameFactory extends DataFrameFactory {
 
+    /**
+     * TXTDataFrameFactory constructor.
+     */
     public TXTDataFrameFactory() {
         super();
     }
 
+    /**
+     * @param filename File.
+     * @param format Character used to separate fields.
+     * @return TXTDataFrame.
+     */
     @Override
-    public DataFrameAbstract createDataFrame(String filename, String format) {
+    public DataFrameFile createDataFrame(String filename, String format) {
         String split = switch (format) {
             case "space" -> " ";
             case "semicolon" -> ";";

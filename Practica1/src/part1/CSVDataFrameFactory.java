@@ -6,14 +6,26 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+/**
+ * DataFrameFactory implementation.
+ */
 public class CSVDataFrameFactory extends DataFrameFactory {
 
+    /**
+     * CSVDataFrameFactory constructor.
+     */
     public CSVDataFrameFactory() {
         super();
     }
 
+    /**
+     * Create a new DataFrameFile object (dataframe file).
+     * @param filename File.
+     * @param format Character used to separate fields.
+     * @return CSVDtaFrame.
+     */
     @Override
-    public DataFrameAbstract createDataFrame(String filename, String format) {
+    public DataFrameFile createDataFrame(String filename, String format) {
         LinkedList<HashMap<String, Object>> dataFrame = new LinkedList<>();
 
         String[] headers = null;

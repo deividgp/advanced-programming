@@ -11,13 +11,25 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Set;
 
+/**
+ * DataFrameFactory implementation.
+ */
 public class JSONDataFrameFactory extends DataFrameFactory {
+    /**
+     * JSONDataFrameFactory constructor.
+     */
     public JSONDataFrameFactory() {
         super();
     }
 
 
-    public DataFrameAbstract createDataFrame(String filename, String format) {
+    /**
+     * Create a new JSONDataFrame object (dataframe file).
+     * @param filename File.
+     * @param format Character used to separate fields.
+     * @return JSONDataFrame.
+     */
+    public DataFrameFile createDataFrame(String filename, String format) {
         LinkedList<HashMap<String, Object>> dataFrame = new LinkedList<>();
         Gson gson = new Gson();
 

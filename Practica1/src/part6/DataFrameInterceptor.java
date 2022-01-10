@@ -5,18 +5,28 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
+/**
+ * Dynamic proxy.
+ */
 public class DataFrameInterceptor implements InvocationHandler {
     private Object target = null;
-    private Subject subject = null;
-    public static Object newInstance(Object target){
+    private final Subject subject;
+
+    /**
+     * Creates a new instance of target.
+     * @param target Object.
+     * @param subject Observer manager.
+     * @return New instance of target.
+     */
+    public static Object newInstance(Object target, Subject subject){
         Class targetClass = target.getClass();
         Class interfaces[] = targetClass.getInterfaces();
         return Proxy. newProxyInstance(targetClass.getClassLoader(),
-                interfaces, new DataFrameInterceptor(target));
+                interfaces, new DataFrameInterceptor(target, subject));
     }
-    private DataFrameInterceptor(Object target) {
+    private DataFrameInterceptor(Object target, Subject subject) {
         this.target = target;
-        subject = new Subject();
+        this.subject = subject;
         subject.subscribe(new LogObserver());
         subject.subscribe(new QueryObserver());
     }
@@ -29,6 +39,7 @@ public class DataFrameInterceptor implements InvocationHandler {
             System.out.println("Before method " + method.getName());
             invocationResult = method.invoke(this.target, args);
             System.out.println("After method " + method.getName());
+            subject.notify(method.getName());
         }
         catch(InvocationTargetException ite)
         {
