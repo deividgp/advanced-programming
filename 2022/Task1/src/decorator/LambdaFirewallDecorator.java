@@ -1,12 +1,11 @@
 package decorator;
 
 import actor.Actor;
-import actor.ActorImpl;
 import message.Message;
 
-public class EncryptionDecorator extends ActorDecorator {
+public class LambdaFirewallDecorator extends ActorDecorator {
 
-    public EncryptionDecorator(Actor actor){
+    public LambdaFirewallDecorator(Actor actor){
         super(actor);
     }
 
