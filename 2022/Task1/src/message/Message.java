@@ -12,11 +12,6 @@ public class Message {
         this.text = text;
     }
 
-    public Message(ActorProxy from){
-        this.from = from;
-        this.text = null;
-    }
-
     public Message(){
         this.from = null;
         this.text = null;
@@ -26,15 +21,7 @@ public class Message {
         return from;
     }
 
-    public void setFrom(ActorProxy from) {
-        this.from = from;
-    }
-
     public String getText() {
         return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
     }
 }

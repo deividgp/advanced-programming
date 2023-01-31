@@ -11,4 +11,8 @@ public abstract class ActorDecorator extends ActorImpl {
         super();
         this.actor = actor;
     }
+
+    public Actor getActor() {
+        return actor;
+    }
 }

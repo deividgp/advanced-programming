@@ -1,0 +1,5 @@
+package service;
+
+public enum EventType {
+    CREATED, FINALIZATION, ERROR, RECEIVEDMESSAGE, PROCESSEDMESSAGE
+}

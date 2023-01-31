@@ -14,8 +14,9 @@ public class ActorContext {
         return actorContext;
     }
 
-    public ActorProxy spawnActor(String name, Actor actor){
+    public ActorProxy spawnActor(String name, ActorImpl actor){
         actors.put(name, actor);
+        actor.start();
         return new ActorProxy(actor);
     }
 

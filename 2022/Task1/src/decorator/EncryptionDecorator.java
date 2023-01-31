@@ -10,6 +10,10 @@ public class EncryptionDecorator extends ActorDecorator {
         super(actor);
     }
 
+    public void add(Message message) {
+        super.getActor().add(message);
+    }
+
     @Override
     public void process(Message message) {
 
