@@ -1,7 +1,4 @@
-import actor.ActorContext;
-import actor.ActorProxy;
-import actor.HelloWorldActor;
-import actor.InsultActor;
+import actor.*;
 import decorator.EncryptionDecorator;
 import decorator.FirewallDecorator;
 import decorator.LambdaFirewallDecorator;
@@ -18,7 +15,7 @@ import service.TrafficLevel;
 import java.util.function.Predicate;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         ActorProxy hello = ActorContext.getInstance().spawnActor("Test 1 ", new HelloWorldActor());
         hello.send(new Message(null, "Hello World"));
         hello.send(new QuitMessage());
@@ -29,13 +26,13 @@ public class Main {
         System.out.println(insult.receive().getText());
         insult.send(new QuitMessage());
 
-        /*LambdaFirewallDecorator lambdaFirewallDecorator = new LambdaFirewallDecorator(new FirewallDecorator(new HelloWorldActor()));
+        LambdaFirewallDecorator lambdaFirewallDecorator = new LambdaFirewallDecorator(new FirewallDecorator(new HelloWorldActor()));
         Predicate<String> containsA = x -> x.startsWith("A");
         lambdaFirewallDecorator.addClosureMessage(containsA);
         ActorProxy firewall = ActorContext.getInstance().spawnActor("Test 3", new EncryptionDecorator(lambdaFirewallDecorator));
         firewall.send(new Message(hello, "Hola"));
         firewall.send(new Message(hello, "AAHola"));
-        firewall.send(new QuitMessage());*/
+        firewall.send(new QuitMessage());
 
         try {
             ActorProxy actor = ActorContext.getInstance().spawnActor("Test 4", new InsultActor());
@@ -58,34 +55,28 @@ public class Main {
 
         monitor1.send(new Message(hello, "holahola"));
 
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        Thread.sleep(2000);
+
         monitor1.send(new QuitMessage());
         monitor2.send(new QuitMessage());
         monitor3.send(new QuitMessage());
         monitor4.send(new QuitMessage());
 
+        Thread.sleep(2000);
+
         System.out.println(MonitorService.getInstance().getTraffic().get(TrafficLevel.LOW).toString());
         System.out.println(MonitorService.getInstance().getTraffic().get(TrafficLevel.MEDIUM).toString());
         System.out.println(MonitorService.getInstance().getTraffic().get(TrafficLevel.HIGH).toString());
-        System.out.println(MonitorService.getInstance().getReceivedMessages().get("Test 5"));
-        System.out.println(MonitorService.getInstance().getNumberOfMessages().get("Test 5"));
-        System.out.println(MonitorService.getInstance().getReceivedMessages().get("Test 6"));
-        System.out.println(MonitorService.getInstance().getNumberOfMessages().get("Test 6"));
-        System.out.println(MonitorService.getInstance().getReceivedMessages().get("Test 7"));
-        System.out.println(MonitorService.getInstance().getNumberOfMessages().get("Test 7"));
-        System.out.println(MonitorService.getInstance().getReceivedMessages().get("Test 8"));
-        System.out.println(MonitorService.getInstance().getNumberOfMessages().get("Test 8"));
+
+        while(true){
+            Thread.sleep(2000);
+            PingPong();
+        }
     }
 
-    public void Ring(){
-
-    }
-
-    public void PingPong(){
-
+    public static void PingPong(){
+        ActorProxy proxyActor1 = ActorContext.getInstance().spawnActor("pingpong1", new PingPongActor());
+        ActorProxy proxyActor2 = ActorContext.getInstance().spawnActor("pingpong2", new PingPongActor());
+        proxyActor1.send(new Message(proxyActor2, "Hola"));
     }
 }

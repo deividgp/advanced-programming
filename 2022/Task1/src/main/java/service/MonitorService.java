@@ -26,20 +26,20 @@ public class MonitorService implements ActorListener {
     }
 
     public void monitorActor(String actorName) {
-        ActorImpl users = actorContext.lookup(actorName);
-        users.getListeners().add(this);
+        ActorProxy users = actorContext.lookup(actorName);
+        users.getActor().getListeners().add(this);
     }
 
     public void unmonitorActor(String actorName) {
-        ActorImpl users = actorContext.lookup(actorName);
-        users.getListeners().remove(this);
+        ActorProxy users = actorContext.lookup(actorName);
+        users.getActor().getListeners().add(this);
     }
 
     public void monitorAllActors() {
         Set<String> actorsNames = actorContext.getNames();
         for (String name : actorsNames) {
-            ActorImpl users = actorContext.lookup(name);
-            users.getListeners().add(this);
+            ActorProxy users = actorContext.lookup(name);
+            users.getActor().getListeners().add(this);
             if (numberOfMessages.get(name) == null) initializeListActor(name);
         }
     }
