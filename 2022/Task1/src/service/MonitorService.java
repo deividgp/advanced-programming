@@ -54,10 +54,22 @@ public class MonitorService implements ActorListener {
 
     public void update(EventType eventType, ActorImpl actor) {
         switch (eventType){
-            case PROCESSEDMESSAGE -> updateProcessedMessages(actor.getName());
-            case FINALIZATION ->emptyActorTraffic(EventType.FINALIZATION, actor.getName());
-            case ERROR -> emptyActorTraffic(EventType.ERROR, actor.getName());
-            case CREATED -> initializeListActor(actor.getName());
+            case PROCESSEDMESSAGE -> {
+                System.out.println("Processed");
+                updateProcessedMessages(actor.getName());
+            }
+            case FINALIZATION -> {
+                System.out.println("Finalization");
+                emptyActorTraffic(EventType.FINALIZATION, actor.getName());
+            }
+            case ERROR -> {
+                System.out.println("Error");
+                emptyActorTraffic(EventType.ERROR, actor.getName());
+            }
+            case CREATED -> {
+                System.out.println("Created");
+                initializeListActor(actor.getName());
+            }
         }
         this.updateEvent(eventType, actor.getName());
     }

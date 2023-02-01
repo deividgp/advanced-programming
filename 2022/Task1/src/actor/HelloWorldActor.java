@@ -6,7 +6,6 @@ import message.QuitMessage;
 public class HelloWorldActor extends ActorImpl {
     @Override
     public void process(Message message) {
-        this.messageProcessed();
         switch(message){
             case QuitMessage q -> {
                 if(super.getThread() != null)

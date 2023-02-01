@@ -34,14 +34,14 @@ public abstract class ActorImpl implements Actor, Runnable {
     }
 
     public void start() {
+        this.notifyAllObservers(EventType.CREATED);
         thread = new Thread(this);
         thread.start();
-        this.notifyAllObservers(EventType.CREATED);
     }
 
     public void stop() {
-        thread.interrupt();
         this.notifyAllObservers(EventType.FINALIZATION);
+        thread.interrupt();
     }
 
     public void messageProcessed() {

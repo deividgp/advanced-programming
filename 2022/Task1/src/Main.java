@@ -29,13 +29,13 @@ public class Main {
         System.out.println(insult.receive().getText());
         insult.send(new QuitMessage());
 
-        LambdaFirewallDecorator lambdaFirewallDecorator = new LambdaFirewallDecorator(new FirewallDecorator(new HelloWorldActor()));
+        /*LambdaFirewallDecorator lambdaFirewallDecorator = new LambdaFirewallDecorator(new FirewallDecorator(new HelloWorldActor()));
         Predicate<String> containsA = x -> x.startsWith("A");
         lambdaFirewallDecorator.addClosureMessage(containsA);
         ActorProxy firewall = ActorContext.getInstance().spawnActor("Test 3", new EncryptionDecorator(lambdaFirewallDecorator));
         firewall.send(new Message(hello, "Hola"));
         firewall.send(new Message(hello, "AAHola"));
-        firewall.send(new QuitMessage());
+        firewall.send(new QuitMessage());*/
 
         try {
             ActorProxy actor = ActorContext.getInstance().spawnActor("Test 4", new InsultActor());
@@ -49,33 +49,36 @@ public class Main {
             throw new RuntimeException(e);
         }
 
-        ActorProxy monitor1 = ActorContext.getInstance().spawnActor("Test 5 ", new HelloWorldActor());
-        ActorProxy monitor2 = ActorContext.getInstance().spawnActor("Test 6 ", new HelloWorldActor());
-        ActorProxy monitor3 = ActorContext.getInstance().spawnActor("Test 7 ", new HelloWorldActor());
-        ActorProxy monitor4 = ActorContext.getInstance().spawnActor("Test 8 ", new HelloWorldActor());
-        monitor1.stop();
-        monitor2.stop();
-        monitor3.stop();
-        monitor4.stop();
+        ActorProxy monitor1 = ActorContext.getInstance().spawnActor("Test 5", new HelloWorldActor());
+        ActorProxy monitor2 = ActorContext.getInstance().spawnActor("Test 6", new HelloWorldActor());
+        ActorProxy monitor3 = ActorContext.getInstance().spawnActor("Test 7", new HelloWorldActor());
+        ActorProxy monitor4 = ActorContext.getInstance().spawnActor("Test 8", new HelloWorldActor());
+
         MonitorService.getInstance().monitorAllActors();
 
-        monitor1.start();
-        monitor2.start();
-        monitor3.start();
-        monitor4.start();
+        monitor1.send(new Message(hello, "holahola"));
 
-        monitor1.stop();
-        monitor2.stop();
-        monitor3.stop();
-        monitor4.stop();
-
-        monitor1.send(new Message(hello, "hola"));
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        monitor1.send(new QuitMessage());
+        monitor2.send(new QuitMessage());
+        monitor3.send(new QuitMessage());
+        monitor4.send(new QuitMessage());
 
         System.out.println(MonitorService.getInstance().getTraffic().get(TrafficLevel.LOW).toString());
-        System.out.println(MonitorService.getInstance().getReceivedMessages().get("Test 5 "));
-        System.out.println(MonitorService.getInstance().getNumberOfMessages().get("Test 5 "));
-        System.out.println(MonitorService.getInstance().getReceivedMessages().get("Test 6 "));
-        System.out.println(MonitorService.getInstance().getNumberOfMessages().get("Test 6 "));
+        System.out.println(MonitorService.getInstance().getTraffic().get(TrafficLevel.MEDIUM).toString());
+        System.out.println(MonitorService.getInstance().getTraffic().get(TrafficLevel.HIGH).toString());
+        System.out.println(MonitorService.getInstance().getReceivedMessages().get("Test 5"));
+        System.out.println(MonitorService.getInstance().getNumberOfMessages().get("Test 5"));
+        System.out.println(MonitorService.getInstance().getReceivedMessages().get("Test 6"));
+        System.out.println(MonitorService.getInstance().getNumberOfMessages().get("Test 6"));
+        System.out.println(MonitorService.getInstance().getReceivedMessages().get("Test 7"));
+        System.out.println(MonitorService.getInstance().getNumberOfMessages().get("Test 7"));
+        System.out.println(MonitorService.getInstance().getReceivedMessages().get("Test 8"));
+        System.out.println(MonitorService.getInstance().getNumberOfMessages().get("Test 8"));
     }
 
     public void Ring(){
