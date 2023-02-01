@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class ActorContext {
     private static ActorContext actorContext = new ActorContext();
-    private HashMap<String, Actor> actors = new HashMap<>();
+    private HashMap<String, ActorImpl> actors = new HashMap<>();
 
     private ActorContext() {}
 
@@ -16,11 +16,12 @@ public class ActorContext {
 
     public ActorProxy spawnActor(String name, ActorImpl actor){
         actors.put(name, actor);
+        actor.setName(name);
         actor.start();
         return new ActorProxy(actor);
     }
 
-    public Actor lookup(String name){
+    public ActorImpl lookup(String name){
         return actors.get(name);
     }
 

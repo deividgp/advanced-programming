@@ -10,6 +10,7 @@ public class InsultActor extends ActorImpl {
 
     @Override
     public void process(Message message) {
+        this.messageProcessed();
         switch(message){
             case QuitMessage ignored -> super.stop();
             case GetInsultMessage ignored -> {

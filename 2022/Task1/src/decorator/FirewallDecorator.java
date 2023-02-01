@@ -4,6 +4,7 @@ import actor.Actor;
 import actor.ActorContext;
 import actor.ActorImpl;
 import message.Message;
+import message.QuitMessage;
 
 public class FirewallDecorator extends ActorDecorator {
 
@@ -11,13 +12,22 @@ public class FirewallDecorator extends ActorDecorator {
         super(actor);
     }
 
-    public void add(Message message) {
-        super.getActor().add(message);
-    }
-
     @Override
     public void process(Message message) {
+        if(message instanceof QuitMessage){
+            this.getActor().process(message);
+            return;
+        }
+
         ActorContext actorContext = ActorContext.getInstance();
-        //if(actorContext.lookup(message.getFrom().getActor().)
+        String actorName = null;
+        try {
+            actorName = message.getFrom().getActor().getName();
+        }catch (NullPointerException e) {
+
+        }
+        if (actorContext.lookup(actorName) != null) {
+            this.getActor().process(message);
+        }
     }
 }

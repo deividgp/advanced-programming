@@ -1,9 +1,6 @@
 package service;
 
-import actor.Actor;
-import actor.ActorContext;
-import actor.ActorListener;
-import actor.ActorProxy;
+import actor.*;
 import message.Message;
 
 import java.sql.Array;
@@ -30,32 +27,32 @@ public class MonitorService implements ActorListener {
     }
 
     public void monitorActor(String actorName) {
-        Actor users = actorContext.lookup(actorName);
+        ActorImpl users = actorContext.lookup(actorName);
         users.getListeners().add(this);
     }
 
     public void unmonitorActor(String actorName) {
-        Actor users = actorContext.lookup(actorName);
+        ActorImpl users = actorContext.lookup(actorName);
         users.getListeners().remove(this);
     }
 
     public void monitorAllActors() {
         Set<String> actorsNames = actorContext.getNames();
         for (String name : actorsNames) {
-            Actor users = actorContext.lookup(name);
+            ActorImpl users = actorContext.lookup(name);
             users.getListeners().add(this);
             if (numberOfMessages.get(name) == null) initializeListActor(name);
         }
     }
 
     @Override
-    public void update(EventType eventType, Actor actor, Message message) {
+    public void update(EventType eventType, ActorImpl actor, Message message) {
         this.updateEvent(eventType, actor.getName());
         this.updateMessagesReceived(actor.getName(), message);
         this.updateNumberMessages(actor.getName());
     }
 
-    public void update(EventType eventType, Actor actor) {
+    public void update(EventType eventType, ActorImpl actor) {
         switch (eventType){
             case PROCESSEDMESSAGE -> updateProcessedMessages(actor.getName());
             case FINALIZATION ->emptyActorTraffic(EventType.FINALIZATION, actor.getName());
@@ -70,7 +67,7 @@ public class MonitorService implements ActorListener {
     }
 
     private void updateNumberMessages(String actorName) {
-        int numberOfMessages = actorContext.lookup(actorName).getActor().getQueue().size();
+        int numberOfMessages = actorContext.lookup(actorName).getMessages().size();
         this.numberOfMessages.put(actorName, numberOfMessages);
 
         if (numberOfMessages <= 5) {
@@ -111,5 +108,25 @@ public class MonitorService implements ActorListener {
         updateEvent(eventType, actorName);
         this.numberOfMessages.put(actorName, 0);
         this.updateNumberMessages(actorName);
+    }
+
+    public Map<TrafficLevel, Set<String>> getTraffic() {
+        return traffic;
+    }
+
+    public Map<String, List<Message>> getReceivedMessages() {
+        return receivedMessages;
+    }
+
+    public Map<String, List<EventType>> getEvents() {
+        return events;
+    }
+
+    public Map<String, Integer> getNumberOfMessages() {
+        return numberOfMessages;
+    }
+
+    public Map<String, Integer> getNumberProcessedMessages() {
+        return numberProcessedMessages;
     }
 }

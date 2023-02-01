@@ -29,7 +29,7 @@ public class ActorProxy implements Actor {
         return messages.poll();
     }
 
-    public Actor getActor() {
+    public ActorImpl getActor() {
         return actor;
     }
 
@@ -45,5 +45,13 @@ public class ActorProxy implements Actor {
     @Override
     public void process(Message message) {
 
+    }
+
+    public void start() {
+        actor.start();
+    }
+
+    public void stop() {
+        actor.stop();
     }
 }
