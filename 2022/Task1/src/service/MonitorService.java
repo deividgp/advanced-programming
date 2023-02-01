@@ -3,18 +3,17 @@ package service;
 import actor.*;
 import message.Message;
 
-import java.sql.Array;
 import java.util.*;
 
 public class MonitorService implements ActorListener {
     private final ActorContext actorContext = ActorContext.getInstance();
     private static final MonitorService monitorService = new MonitorService();
-    private Map<TrafficLevel, Set<String>> traffic = new HashMap<>();
-    private Map<String, List<Message>> sentMessages = new HashMap<>();
-    private Map<String, List<Message>> receivedMessages = new HashMap<>();
-    private Map<String, List<EventType>> events = new HashMap<>();
-    private Map<String, Integer> numberOfMessages = new HashMap<>();
-    private Map<String, Integer> numberProcessedMessages = new HashMap<>();
+    private final Map<TrafficLevel, Set<String>> traffic = new HashMap<>();
+    private final Map<String, List<Message>> sentMessages = new HashMap<>();
+    private final Map<String, List<Message>> receivedMessages = new HashMap<>();
+    private final Map<String, List<EventType>> events = new HashMap<>();
+    private final Map<String, Integer> numberOfMessages = new HashMap<>();
+    private final Map<String, Integer> numberProcessedMessages = new HashMap<>();
 
     public MonitorService() {
         this.traffic.put(TrafficLevel.LOW, new HashSet<>());
@@ -130,15 +129,7 @@ public class MonitorService implements ActorListener {
         return receivedMessages;
     }
 
-    public Map<String, List<EventType>> getEvents() {
-        return events;
-    }
-
     public Map<String, Integer> getNumberOfMessages() {
         return numberOfMessages;
-    }
-
-    public Map<String, Integer> getNumberProcessedMessages() {
-        return numberProcessedMessages;
     }
 }
