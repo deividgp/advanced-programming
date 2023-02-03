@@ -12,10 +12,16 @@ import message.QuitMessage;
 import service.MonitorService;
 import service.TrafficLevel;
 
+import java.net.URISyntaxException;
 import java.util.function.Predicate;
 
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
+
 public class Main {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, URISyntaxException {
+        Socket socket = IO.socket("http://localhost:3000");
         ActorProxy hello = ActorContext.getInstance().spawnActor("Test 1 ", new HelloWorldActor());
         hello.send(new Message(null, "Hello World"));
         hello.send(new QuitMessage());

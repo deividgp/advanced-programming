@@ -1,32 +1,94 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import {
+  Button,
+  Select,
+  TextField,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  Box
+} from '@mui/material'
+import { DataGrid } from '@mui/x-data-grid'
 
-function App() {
-  const [count, setCount] = useState(0)
+function App () {
+  const [actorName, setActorName] = useState('')
+  const [actorType, setActorType] = useState('')
+  const [message, setMessage] = useState('')
+  const [from, setFrom] = useState('')
+  const columns = [
+    {
+      field: 'name',
+      headerName: 'Actor name',
+      width: 150
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      width: 150
+    }
+  ]
+  const rows = [{ id: 1, name: 'Pedro', status: 'hola' }]
+
+  const createACtor = () => {
+    console.log(actorName)
+  }
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '20px',
+        width: '500px'
+      }}
+    >
+      <TextField
+        label='Actor name'
+        value={actorName}
+        onChange={(event) => setActorName(event.target.value)}
+      />
+      <FormControl>
+        <InputLabel id='demo-simple-select-label'>Actor type</InputLabel>
+        <Select
+          id='demo-simple-select'
+          labelId='demo-simple-select-label'
+          value={actorType}
+          label='Actor type'
+          onChange={(event) => setActorType(event.target.value)}
+        >
+          <MenuItem value={1}>HelloWorldActor</MenuItem>
+          <MenuItem value={2}>InsultActor</MenuItem>
+          <MenuItem value={3}>PingPongActor</MenuItem>
+        </Select>
+      </FormControl>
+      <Button
+        variant='contained'
+        style={{ width: '200px' }}
+        onClick={createACtor}
+      >
+        Create actor
+      </Button>
+      <TextField
+        label='Message'
+        value={message}
+        onChange={(event) => setMessage(event.target.value)}
+      />
+      <TextField
+        label='From'
+        value={from}
+        onChange={(event) => setFrom(event.target.value)}
+      />
+      <Button variant='contained' style={{ width: '200px' }}>
+        Send message
+      </Button>
+      <Box sx={{ height: 400, width: '800px' }}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          pageSize={5}
+          disableSelectionOnClick
+        />
+      </Box>
     </div>
   )
 }
