@@ -1,6 +1,7 @@
 package actor;
 
 import message.Message;
+import org.json.JSONException;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -47,11 +48,11 @@ public class ActorProxy implements Actor {
 
     }
 
-    public void start() {
+    public void start() throws JSONException {
         actor.start();
     }
 
-    public void stop() {
+    public void stop() throws JSONException {
         actor.stop();
     }
 }

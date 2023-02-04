@@ -1,6 +1,7 @@
 package actor;
 
 import message.*;
+import org.json.JSONException;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,7 +10,7 @@ public class InsultActor extends ActorImpl {
     List<String> insults = new LinkedList<>();
 
     @Override
-    public void process(Message message) {
+    public void process(Message message) throws JSONException {
         this.messageProcessed();
         switch(message){
             case QuitMessage ignored -> super.stop();
@@ -24,7 +25,7 @@ public class InsultActor extends ActorImpl {
                 }
             }
             case AddInsultMessage addInsultMessage -> insults.add(addInsultMessage.getText());
-            case GetAllInsultsMessage ignored -> {
+            case GetAlInsultsMessage ignored -> {
                 ActorProxy actorProxy = message.getFrom();
 
                 if (actorProxy.getActor() == this) {

@@ -1,12 +1,16 @@
 package service;
 
 import actor.*;
+import io.socket.client.Socket;
 import message.Message;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.*;
 
 public class MonitorService implements ActorListener {
     private final ActorContext actorContext = ActorContext.getInstance();
+    private final Socket actorSocket = ActorContext.getActorSocket();
     private static final MonitorService monitorService = new MonitorService();
     private final Map<TrafficLevel, Set<String>> traffic = new HashMap<>();
     private final Map<String, List<Message>> sentMessages = new HashMap<>();
@@ -46,35 +50,43 @@ public class MonitorService implements ActorListener {
 
     @Override
     public void update(EventType eventType, ActorImpl actor, Message message) {
-        this.updateEvent(eventType, actor.getName());
+        events.get(actor.getName()).add(eventType);
         this.updateMessagesReceived(actor.getName(), message);
         this.updateNumberMessages(actor.getName());
     }
 
-    public void update(EventType eventType, ActorImpl actor) {
+    public void update(EventType eventType, ActorImpl actor) throws JSONException {
+        JSONObject status = new JSONObject();
+        status.put("name", actor.getName());
         switch (eventType){
             case PROCESSEDMESSAGE -> {
                 System.out.println("Processed");
+                status.put("status", "Processed");
                 updateProcessedMessages(actor.getName());
             }
-            case FINALIZATION -> {
-                System.out.println("Finalization");
-                emptyActorTraffic(EventType.FINALIZATION, actor.getName());
+            case FINALIZED -> {
+                System.out.println("Finalized");
+                status.put("status", "Finalized");
+                emptyActorTraffic(EventType.FINALIZED, actor.getName());
             }
             case ERROR -> {
                 System.out.println("Error");
+                status.put("status", "Error");
                 emptyActorTraffic(EventType.ERROR, actor.getName());
             }
             case CREATED -> {
                 System.out.println("Created");
+                status.put("status", "Created");
                 initializeListActor(actor.getName());
             }
         }
-        this.updateEvent(eventType, actor.getName());
-    }
-
-    public void updateEvent(EventType eventType, String actorName) {
-        this.events.get(actorName).add(eventType);
+        events.get(actor.getName()).add(eventType);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        actorSocket.emit("update_status", status);
     }
 
     private void updateNumberMessages(String actorName) {
@@ -104,7 +116,8 @@ public class MonitorService implements ActorListener {
 
     public void updateMessagesReceived(String actorName, Message message) {
         this.receivedMessages.get(actorName).add(message);
-        this.sentMessages.get(message.getFrom().getActor().getName()).add(message);
+        if(message.getFrom() != null)
+            this.sentMessages.get(message.getFrom().getActor().getName()).add(message);
     }
 
     public void initializeListActor(String actorName) {
@@ -116,7 +129,7 @@ public class MonitorService implements ActorListener {
     }
 
     public void emptyActorTraffic(EventType eventType, String actorName) {
-        updateEvent(eventType, actorName);
+        events.get(actorName).add(eventType);
         this.numberOfMessages.put(actorName, 0);
         this.updateNumberMessages(actorName);
     }

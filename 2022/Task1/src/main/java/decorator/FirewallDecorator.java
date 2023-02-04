@@ -5,6 +5,7 @@ import actor.ActorContext;
 import actor.ActorImpl;
 import message.Message;
 import message.QuitMessage;
+import org.json.JSONException;
 
 public class FirewallDecorator extends ActorDecorator {
 
@@ -13,7 +14,7 @@ public class FirewallDecorator extends ActorDecorator {
     }
 
     @Override
-    public void process(Message message) {
+    public void process(Message message) throws JSONException {
         if(message instanceof QuitMessage){
             this.getActor().process(message);
             return;

@@ -3,6 +3,7 @@ package decorator;
 import actor.Actor;
 import message.Message;
 import message.QuitMessage;
+import org.json.JSONException;
 
 import java.util.function.Predicate;
 
@@ -18,7 +19,7 @@ public class LambdaFirewallDecorator extends ActorDecorator {
     }
 
     @Override
-    public void process(Message message) {
+    public void process(Message message) throws JSONException {
         if (message instanceof QuitMessage || filter.test(message.getText()))
             super.getActor().process(message);
     }

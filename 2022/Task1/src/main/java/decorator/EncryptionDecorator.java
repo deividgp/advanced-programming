@@ -3,6 +3,7 @@ package decorator;
 import actor.Actor;
 import actor.ActorImpl;
 import message.Message;
+import org.json.JSONException;
 
 public class EncryptionDecorator extends ActorDecorator {
 
@@ -11,7 +12,7 @@ public class EncryptionDecorator extends ActorDecorator {
     }
 
     @Override
-    public void process(Message message) {
+    public void process(Message message) throws JSONException {
         super.getActor().process(message);
     }
 }

@@ -1,6 +1,7 @@
 package actor;
 
 import message.Message;
+import org.json.JSONException;
 import service.EventType;
 
 import java.util.ArrayList;
@@ -16,35 +17,39 @@ public abstract class ActorImpl implements Actor, Runnable {
 
     @Override
     public void add(Message message) {
-        this.messageProcessed();
+        this.notifyAllObservers(EventType.RECEIVEDMESSAGE, message);
         messages.add(message);
     }
 
     @Override
-    public abstract void process(Message message);
+    public abstract void process(Message message) throws JSONException;
 
     @Override
     public void run() {
         while(!thread.isInterrupted()){
             Message message = messages.poll();
             if (message != null) {
-                process(message);
+                try {
+                    process(message);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
 
-    public void start() {
+    public void start() throws JSONException {
         this.notifyAllObservers(EventType.CREATED);
         thread = new Thread(this);
         thread.start();
     }
 
-    public void stop() {
-        this.notifyAllObservers(EventType.FINALIZATION);
+    public void stop() throws JSONException {
+        this.notifyAllObservers(EventType.FINALIZED);
         thread.interrupt();
     }
 
-    public void messageProcessed() {
+    public void messageProcessed() throws JSONException {
         this.notifyAllObservers(EventType.PROCESSEDMESSAGE);
     }
 
@@ -64,7 +69,7 @@ public abstract class ActorImpl implements Actor, Runnable {
         return thread;
     }
 
-    public void notifyAllObservers(EventType eventType) {
+    public void notifyAllObservers(EventType eventType) throws JSONException {
         for (ActorListener observer : listeners) {
             observer.update(eventType, this);
         }
